@@ -2,7 +2,6 @@
 <img src="https://user-images.githubusercontent.com/41562231/141720820-090897f9-f564-45e2-9265-15c1269db795.png" height="120" width="900">
 </div>
 
-ref: https://towardsdatascience.com/20-popular-machine-learning-metrics-part-2-ranking-statistical-metrics-22c3e5a937b6
 
 # __Popular Machine Learning Metrics.__
 
@@ -192,13 +191,14 @@ The disadvantage of the R2 score is while adding new features in data the R2 sco
 
 fig 8
 
-## 🧲 Part 2: Ranking, & Statistical Metrics
+## 🧲 Part 2: Ranking, & Statistical Evaluation Metrics
 
 <div align="center">
     <h2><b>🦮 Ranking Related Metrics</b></h2>
     Ranking is a fundamental problem in machine learning, which tries to rank a list of items based on their relevance in a particular task (e.g. ranking pages on Google based on their relevance to a given query). 
     
     It has a wide range of applications in E-commerce, and search engines:
+
     - Movie recommendation (as in Netflix, and YouTube),
     - Page ranking on Google,
     - Ranking E-commerce products on Amazon,
@@ -272,6 +272,179 @@ Pearson correlation coefficient is perhaps one of the most popular metrics in th
 Correlation coefficient of two random variables (or any two vector/matrix) shows their statistical dependence.
 
 - The correlation coefficient of two variables is always a __value in [-1,1].__ _Two variables are known to be independent if and only if their __correlation is 0.___
+
+## 🧲 Part 3: Computer Vision Evaluation Metrics
+
+<div align="center">
+    <h2><b>🦮 Computer Vision Metrics</b></h2>
+    More recently, with the popularization of the convolutional neural networks (CNN) and GPU-accelerated deep-learning frameworks, object- detection algorithms started being developed from a new perspective. CNNs such as R-CNN, Fast R-CNN, Faster R-CNN, R-FCN, SSD and Yolo have highly increased the performance standards on the field.
+    
+    Object detection metrics serve as a measure to assess how well the model performs on an object detection task. It also enables us to compare multiple detection systems objectively or compare them to a benchmark. In most competitions, the average precision (AP) and its derivations are the metrics adopted to assess the detections and thus rank the teams
+</div><br>
+
+__📌 IoU:__
+
+Guiding principle in all state-of-the-art metrics is the so-called __Intersection-over-Union (IoU) overlap measure__. It is quite literally defined as the intersection over union of the detection bounding box and the ground truth bounding box.
+
+Dividing the area of overlap between predicted bounding box and ground truth by the area of their union yields the Intersection over Union.
+
+__An Intersection over Union score > 0.5 is normally considered a good prediction.__
+
+fig 18
+
+IoU metric determines how many objects were detected correctly and how many false positives were generated (will be discussed below).
+
+- _True Positives [TP]-_ 
+Number of detections with __IoU > 0.5__
+
+- _False Positives [FP]-_ Number of detections with __IoU <= 0.5__ or detected more than once
+
+- _False Negatives [FN]-_ Number of objects that not detected or detected with __IoU <= 0.5__
+
+- _Precision-_ Precision measures how accurate your predictions are. i.e. the percentage of your predictions that are correct.
+
+    Precision = True positive / (True positive + False positive)
+
+- _Recall-_ Recall measures how good you find all the positives. 
+
+    Recall = True positive / (True positive + False negative)
+
+- _F1 Score-_ F1 score is HM (Harmonic Mean) of precision and recall.
+
+fig 19
+
+__i) AP -__ The general definition for the Average Precision(AP) is finding the area under the precision-recall curve.
+
+__ii) mAP -__ The mAP for object detection is the average of the AP calculated for all the classes. mAP@0.5 means that it is the mAP calculated at IOU threshold 0.5.
+
+fig 20
+
+__iii) mAP Vs other metric -__ The mAP is a good measure of the sensitivity of the neural network. So good mAP indicates a model that's stable and consistent across different confidence thresholds. Precision, Recall and F1 score are computed for given confidence threshold.
+
+- Which metric is more important ?
+
+In general to analyse better performing models, it's advisable to use both validation set (data set that is used to tune hyper-parameters) and test set (data set that is used to assess the performance of a fully-trained model).
+
+    a) On validation set-
+
+    Use mAP to select the best performing model (model that is more stable and consistent) out of all the trained weights across iterations/epochs. Use mAP to understand whether the model should be trained/tuned further or not.
+
+    Check class level AP values to ensure the model is stable and good across the classes. As per use-case/application, if you're completely tolerant to FNs and highly intolerant to FPs then to train/tune the model accordingly use Precision. As per use-case/application, if you're completely tolerant to FPs and highly intolerant to FNs then to train/tune the model accordingly use Recall.
+
+    b) On test set-
+
+    If you're neutral towards FPs and FNs, then use F1 score to evaluate the best performing model.
+    
+    If FPs are not acceptable to you (without caring much about FNs) then pick the model with higher Precision. If FNs are not acceptable to you (without caring much about FPs) then pick the model with higher Recall
+
+    Once you decide metric you should be using, try out multiple confidence thresholds (say for example - 0.25, 0.35 and 0.5) for given model to understand for which confidence threshold value the metric you selected works in your favour and also to understand acceptable trade off ranges (say you want Precision of at least 80% and some decent Recall). Once confidence threshold is decided, you use it across different models to find out the best performing model.
+
+__📌 PSNR:__
+
+__Peak signal-to-noise ratio (PSNR)__ is the ratio between the maximum possible power of an image and the power of corrupting noise that affects the quality of its representation. If we have 8-bit pixels, then the values of the pixel channels must be from 0 to 255. By the way, the red, green, blue or RGB color model fits best for the PSNR. PSNR shows a ratio between the maximum possible power of a signal and the power of corrupting noise that affects the fidelity of its representation.
+
+    Input image, specified as scalar, vector, or matrix.
+    
+    Data Types: single | double | int8 | int16 | int32 | int64 | uint8 | uint16 | uint32 | uint64 | Boolean | fixed point
+
+    Data Types: double
+
+fig 21, 22
+```python
+from math import log10, sqrt
+import cv2
+import numpy as np
+  
+def PSNR(original, compressed):
+    mse = np.mean((original - compressed) ** 2)
+    if(mse == 0):  # MSE is zero means no noise is present in the signal .
+        # Therefore PSNR have no importance.          
+        return 100
+    max_pixel = 255.0
+    psnr = 20 * log10(max_pixel / sqrt(mse))
+    return psnr
+  
+def main():
+     original = cv2.imread("original_image.png")
+     compressed = cv2.imread("compressed_image.png", 1)
+     value = PSNR(original, compressed)
+     print(f"PSNR value is {value})
+       
+if __name__ == "__main__":
+    main()
+```
+    Output: 
+    PSNR value is 43.862955653517126
+    
+    *Note: Above code and mentioned images are different, demonstrated for just of understanding 
+
+__📌 SSIM__
+
+__The Structural Similarity Index (SSIM)__ is a perceptual metric that quantifies the image quality degradation that is caused by processing such as data compression or by losses in data transmission. This metric is basically a full reference that requires 2 images from the same shot, this means 2 graphically identical images to the human eye. The second image generally is compressed or has a different quality, which is the goal of this index.
+
+- SSIM actually measures the perceptual difference between two similar images.
+- Generally SSIM values 0.97, 0.98, 0.99 for good quallty recontruction techniques.
+
+fig 23
+
+```python
+from skimage.metrics import structural_similarity
+import imutils
+import cv2
+from PIL import Image
+
+original = cv2.imread('pan_card_tampering/image/original.png')
+tampered = cv2.imread('pan_card_tampering/image/tampered.png')
+
+# The file format of the source file.
+print("Original image format : ",original.format) 
+print("Tampered image format : ",tampered.format)
+# Image size, in pixels. The size is given as a 2-tuple (width, height).
+print("Original image size : ",original.size) 
+print("Tampered image size : ",tampered.size)
+
+# Resize Image
+original = original.resize((250, 160))
+print(original.size)
+original.save('pan_card_tampering/image/original.png')#Save image
+tampered = tampered.resize((250,160))
+print(tampered.size)
+tampered.save('pan_card_tampering/image/tampered.png')#Saves image
+
+# Convert the images to grayscale
+original_gray = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+tampered_gray = cv2.cvtColor(tampered, cv2.COLOR_BGR2GRAY)
+
+(score, diff) = structural_similarity(original_gray, tampered_gray, full=True)
+diff = (diff * 255).astype("uint8")
+print("SSIM Score is : {}".format(score*100))
+if score >= 80:
+    print ("The given pan card is original")
+else:
+    print("The given pan card is tampered")
+
+# Calculating threshold and contours 
+thresh = cv2.threshold(diff, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+cnts = imutils.grab_contours(cnts)
+
+for c in cnts:
+    # applying contours on image
+    (x, y, w, h) = cv2.boundingRect(c)
+    cv2.rectangle(original, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    cv2.rectangle(tampered, (x, y), (x + w, y + h), (0, 0, 255), 2)
+
+#Display original image with contour
+print('Original Format Image')
+original_contour = Image.fromarray(original)
+original_contour.save("demo/original_contour_image.png")
+````
+    Output: 
+    SSIM Score is : 31.678790332739425
+    The given pan card is tampered
+
+
+PSNR, SSIM
 
   
 <div align="left">
