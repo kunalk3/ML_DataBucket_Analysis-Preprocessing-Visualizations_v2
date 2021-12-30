@@ -15,6 +15,7 @@ Choosing the right metric is crucial while evaluating machine learning (ML) mode
 - __NLP Metrics__ (Perplexity, BLEU score)
 - __Text Similarity Metrics__ (Jaccard Index, Cosine Similarity)
 - __Deep Learning Related Metrics__ (Inception score, Frechet Inception distance)
+- __Clustering Metrics__ (Silhouette Score, Dunn’s Index)
 
 ---
 
@@ -1362,8 +1363,74 @@ print('FID (different): %.3f' % fid)
 
 ---
 
+## 🧲 Part 6: Clusters Evaluation Matrics
 
+<div align="center">
+    <h2><b>🎰 Performance Evaluation for clustering</b></h2>
+    <i>Clustering is the most common form of unsupervised learning. clusters are evaluated based on some similarity or dissimilarity measure such as the distance between cluster points. If the clustering algorithm separates dissimilar observations apart and similar observations together, then it has performed well.</i>
+</div><br>
 
+---
+
+__📌 Silhouette Coefficient:__
+
+The Silhouette Coefficient tells us how well-assigned each individual point. 
+
+- The __score is bounded between -1 for incorrect clustering and +1 for highly dense clustering__. Scores around zero indicate overlapping clusters. The score is higher when clusters are dense and well separated, which relates to a standard concept of a cluster.
+
+<div align="center">
+    <img src="Assets/36.JPG" height="60" width="200">
+</div>
+
+    The Silhouette Coefficient is defined for each sample and is composed of two scores:
+    a: The mean distance between a sample and all other points in the same cluster.
+    b: The mean distance between a sample and all other points in the next nearest cluster.
+		   
+```python
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
+kmeans = KMeans(n_clusters = 4, init = "k-means++", max_iter = 300, n_init = 10, random_state = 0)
+y_kmeans = kmeans.fit_predict(milage_data_norm)
+						    
+print(f'Silhouette Score: {silhouette_score(milage_data_norm, y_kmeans)}')
+```
+						  
+---
+
+__📌 Rand Index and Adjusted Rand Index:__						  
+		   
+ It computes a similarity measure between two clusters by considering all pairs of samples and counting pairs that are assigned in the same or different clusters in the predicted and true clusterings.						  
+						  
+<div align="center">
+    <img src="Assets/37.JPG" height="37" width="200">
+</div>
+						    
+<div align="center">
+    <img src="Assets/38.JPG" height="38" width="200">
+</div>
+						    
+- The Adjusted Rand Index, similarly to RI, ranges from zero to one, with zero equating to random labelling and one when the clusters are identical.
+
+```python
+sklearn.metrics.rand_score(labels_true, labels_pred)
+						    
+sklearn.metrics.adjusted_mutual_info_score(labels_true, labels_pred, *, average_method='arithmetic')
+```
+						  
+---
+
+__📌 Davies-Bouldin Index__
+
+The Davies-Bouldin Index is defined as the average similarity measure of each cluster with its most similar cluster. Similarity is the ratio of within-cluster distances to between-cluster distances. In this way, clusters which are farther apart and less dispersed will lead to a better score.
+
+- The minimum score is zero, and differently from most performance metrics, the lower values the better clustering performance.					    
+
+```python    
+sklearn.metrics.davies_bouldin_score(X, labels)						    
+```
+						    
+---
 <div align="left">
 <img src="https://user-images.githubusercontent.com/41562231/141720940-53eb9b25-777d-4057-9c2d-8e22d2677c7c.png" height="120" width="900">
 </div>
