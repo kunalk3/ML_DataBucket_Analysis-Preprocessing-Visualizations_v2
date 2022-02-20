@@ -1,6 +1,6 @@
 <div align="right">
 <img src="https://user-images.githubusercontent.com/41562231/141720820-090897f9-f564-45e2-9265-15c1269db795.png" height="120" width="900">
-</div>
+</div> 
 
 # __Popular Machine Learning Metrics.__
 
