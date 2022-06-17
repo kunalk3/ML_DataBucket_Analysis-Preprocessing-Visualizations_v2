@@ -16,6 +16,7 @@ Choosing the right metric is crucial while evaluating machine learning (ML) mode
 - __Text Similarity Metrics__ (Jaccard Index, Cosine Similarity)
 - __Deep Learning Related Metrics__ (Inception score, Frechet Inception distance)
 - __Clustering Metrics__ (Silhouette Score, Dunn’s Index)
+- __Time Series Error Metrics__ (MAE. MAPE, sMAPE, RMSE)
 
 ---
 
