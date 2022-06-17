@@ -10,13 +10,13 @@ Choosing the right metric is crucial while evaluating machine learning (ML) mode
 - __Classification Metrics__ (accuracy, precision, recall, F1-score, ROC, AUC, log-loss)
 - __Regression Metrics__ (MSE, MAE, RMSE, Adj R². R²)
 - __Ranking Metrics__ (MRR, DCG, NDCG)
-- __Statistical Metrics__ (Correlation)
+- __Statistical Metrics__ (Correlation - Pearson, Spearman)
 - __Computer Vision Metrics__ (PSNR, SSIM, IoU)
 - __NLP Metrics__ (Perplexity, BLEU score)
 - __Text Similarity Metrics__ (Jaccard Index, Cosine Similarity)
 - __Deep Learning Related Metrics__ (Inception score, Frechet Inception distance)
 - __Clustering Metrics__ (Silhouette Score, Dunn’s Index)
-- __Time Series Error Metrics__ (MAE. MAPE, sMAPE, RMSE)
+- __Time Series Error Metrics__ (MAE. MAPE, sMAPE, RMSE, MASE)
 
 ---
 
